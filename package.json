@@ -1,0 +1,52 @@
+{
+  "name": "nd-6-hw18",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "deps:client": "npm --prefix ./client install",
+    "deps:server": "npm --prefix ./server install",
+    "deps:user-service": "npm --prefix ./microservices/user-service install",
+    "deps:logging-service": "npm --prefix ./microservices/logging-service install",
+
+    "build:client": "npm --prefix ./client run build:client",
+    "build:server": "npm --prefix ./server run build:server",
+
+    "prod:client": "npm run deps:client && npm run build:client",
+    "prod:server": "npm run deps:server && npm run build:server",
+
+    "start:server": "npm run prod:server && npm run setup:db && npm --prefix ./server run start:prod",
+    "start:user-service": "npm run deps:user-service && npm --prefix ./microservices/user-service run start:prod",
+    "start:logging-service": "npm run deps:logging-service && npm --prefix ./microservices/logging-service run start:prod",
+    "start:microservices": "npm run start:user-service & npm run start:logging-service",
+    "start:redis": "docker run -d --name redis-microservices -p 6379:6379 redis:7-alpine",
+    "start:app": "npm run prod:client && npm run start:server && npm run start:microservices && npm run start:redis",
+
+    "typeorm:migration:run": "npm --prefix ./server run migration:run",
+    "typeorm:migration:generate": "npm --prefix ./server run migration:generate",
+    "typeorm:migration:revert": "npm --prefix ./server run migration:revert",
+    "typeorm:schema:sync": "npm --prefix ./server run schema:sync",
+    "typeorm:schema:drop": "npm --prefix ./server run schema:drop",
+    "db:safe-setup": "npm --prefix ./server run db:safe-setup",
+    "load:demo-data": "npm --prefix ./server run seed:database",
+    "setup:db": "npm run db:safe-setup && npm run load:demo-data",
+    
+    "test:server": "npm --prefix ./server test",
+    "test:user-service": "npm --prefix ./microservices/user-service test",
+    "test:logging-service": "npm --prefix ./microservices/logging-service test",
+    "test:all": "npm run test:server && npm run test:user-service && npm run test:logging-service",
+    "test:coverage": "npm --prefix ./server run test:coverage && npm --prefix ./microservices/user-service run test:coverage && npm --prefix ./microservices/logging-service run test:coverage",
+    
+    "stop:redis": "docker stop redis-microservices && docker rm redis-microservices"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yhorodniy/nd-6-hw18.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yhorodniy/nd-6-hw18/issues"
+  },
+  "homepage": "https://github.com/yhorodniy/nd-6-hw18#readme"
+}

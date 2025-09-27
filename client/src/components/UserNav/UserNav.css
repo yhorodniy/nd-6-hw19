@@ -1,0 +1,32 @@
+.user-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-email {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn--small {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .user-nav {
+    gap: 12px;
+  }
+  
+  .user-email {
+    display: none;
+  }
+}

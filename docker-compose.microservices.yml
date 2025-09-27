@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  user-service:
+    build:
+      context: ./microservices/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "3011:3011"
+    environment:
+      - PORT=3011
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=your-secret-key-here
+      - NODE_ENV=production
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  logging-service:
+    build:
+      context: ./microservices/logging-service
+      dockerfile: Dockerfile
+    ports:
+      - "3012:3012"
+    environment:
+      - PORT=3012
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    depends_on:
+      - redis
+    restart: unless-stopped
+    volumes:
+      - ./microservices/logging-service/logs:/app/logs
+
+volumes:
+  redis_data:
